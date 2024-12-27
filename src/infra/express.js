@@ -6,6 +6,7 @@ import { productAdvertised } from '../shopee/products/productAdvertised.js'
 import { fetchProductOffers } from '../shopee/fetchProdctOffers.js'
 import { readProducts } from '../shopee/products/productsRead.js'
 import { saveProducts } from '../shopee/products/productsSave.js'
+import { adGenerator } from '../shopee/products/adGenerator.js'
 
 export const app = express()
 
@@ -31,14 +32,20 @@ app.get('/reload-produtos', async (req, res) => {
 
 app.get('/produtos', async (req, res) => {
   const data = await readProducts()
+  const products = data
   res.status(200).json({ success: false, data, errors: [] })
 })
 
 app.get('/advertised', async (req, res) => {
   const limit = parseInt(req.query.limit) || 1
   const data = await readProducts()
-  const advertised = await productAdvertised(data, limit)
-  res.status(200).json({ success: false, data: advertised, errors: [] })
+  let advertised = await productAdvertised(data, limit)
+  advertised = await Promise.all(advertised.map(adGenerator))
+  res.status(200).json({
+    success: false,
+    data: advertised,
+    errors: [],
+  })
 })
 
 app.post('/link', async (req, res) => {
