@@ -6,7 +6,7 @@ USER node
 
 WORKDIR /app
 
-RUN  git clone git@github.com:marcoantonioq/shopee.git . && npm install
+RUN git clone git@github.com:marcoantonioq/shopee.git . && npm install
 
 RUN chmod +x /app/start.sh
 
