@@ -3,7 +3,7 @@ import express from 'express'
 import { formatProduct } from '../utils.js'
 import { fetchProductOffers } from '../shopee/fetchProdctOffers.js'
 import { generateShortLink } from '../shopee/shortLink.js'
-import { saveProducts } from '../google/saveProduts.js'
+import { saveProducts } from '../google/saveProducts.js'
 
 export const app = express()
 
@@ -22,9 +22,9 @@ app.get('/produtos', async (req, res) => {
   res.status(200).json({ success: false, data, errors: [] })
 
   try {
-    saveProducts(data.data)
+    await saveProducts(data)
   } catch (error) {
-    console.log('Erro ao saver na planilha: ', error)
+    console.log('Erro ao salvar: ', error)
   }
 })
 
@@ -40,14 +40,17 @@ app.post('/link', async (req, res) => {
       })
     }
 
-    const shortLink = await generateShortLink(
-      'https://shopee.com.br/product/321104773/18899229598',
-      ['WhatsappMarco', 'Capilar', 'Beleza']
-    )
+    if (link) {
+      const shortLink = await generateShortLink(link, [
+        'WhatsappMarco',
+        'Capilar',
+        'Beleza',
+      ])
 
-    result.data.msg = `Quero: ${shortLink}`
+      result.data.msg = `Quero: ${shortLink}`
 
-    console.log('Obtido link: ', shortLink)
+      console.log('Obtido link: ', shortLink)
+    }
   } catch (error) {
     console.log('Erro ao obter link: ', error)
   }
