@@ -1,3 +1,6 @@
 import { app } from './src/infra/express.js'
+import { state } from './state.js'
 
-app.listen(3000, () => console.log(`Servidor rodando em http://localhost:3000`))
+app.listen(state.port, () =>
+  console.log(`Servidor rodando em http://localhost:${state.port}`)
+)
