@@ -3,6 +3,7 @@ import express from 'express'
 import { formatProduct } from '../utils.js'
 import { fetchProductOffers } from '../shopee/fetchProdctOffers.js'
 import { generateShortLink } from '../shopee/shortLink.js'
+import { saveProducts } from '../google/saveProduts.js'
 
 export const app = express()
 
@@ -18,8 +19,13 @@ app.get('/produtos', async (req, res) => {
   }
 
   const data = products.map(formatProduct)
-
   res.status(200).json({ success: false, data, errors: [] })
+
+  try {
+    saveProducts(data.data)
+  } catch (error) {
+    console.log('Erro ao saver na planilha: ', error)
+  }
 })
 
 app.post('/link', async (req, res) => {

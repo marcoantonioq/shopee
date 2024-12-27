@@ -3,16 +3,22 @@ import { gql } from 'graphql-request'
 
 export const fetchProductOffers = async (
   pagination = 0,
-  sortType = 2,
-  limit = 20
+  sortType = 4,
+  limit = 20,
+  listType = 2
 ) => {
   let hasNextPage = true
   const products = []
   let page = pagination ? pagination : 1
 
   const query = gql`
-    query ($page: Int, $sortType: Int, $limit: Int) {
-      productOfferV2(page: $page, sortType: $sortType, limit: $limit) {
+    query ($page: Int, $sortType: Int, $limit: Int, $listType: Int) {
+      productOfferV2(
+        page: $page
+        sortType: $sortType
+        limit: $limit
+        listType: $listType
+      ) {
         nodes {
           productName
           itemId
@@ -47,7 +53,7 @@ export const fetchProductOffers = async (
   `
 
   while (hasNextPage) {
-    const variables = { page, sortType, limit }
+    const variables = { page, sortType, limit, listType }
     const payload = JSON.stringify({ query, variables })
     const authorization = generateAuthorizationHeader(payload)
 
