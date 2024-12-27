@@ -6,10 +6,9 @@ USER node
 
 WORKDIR /app
 
-COPY package.json ./
-COPY index.js ./
+RUN  git clone git@github.com:marcoantonioq/shopee.git . && npm install
 
-RUN npm install
+RUN chmod +x /app/start.sh
 
 EXPOSE 3000
 
