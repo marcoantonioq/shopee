@@ -1,15 +1,17 @@
 // @ts-nocheck
 import express from 'express'
 import { formatProduct } from '../utils.js'
-import { fetchProductOffers } from '../shopee/fetchProdctOffers.js'
 import { generateShortLink } from '../shopee/shortLink.js'
-import { saveProducts } from '../google/saveProducts.js'
+import { productAdvertised } from '../shopee/products/productAdvertised.js'
+import { fetchProductOffers } from '../shopee/fetchProdctOffers.js'
+import { readProducts } from '../shopee/products/productsRead.js'
+import { saveProducts } from '../shopee/products/productsSave.js'
 
 export const app = express()
 
 app.use(express.json({ limit: '1gb' }))
 
-app.get('/produtos', async (req, res) => {
+app.get('/reload-produtos', async (req, res) => {
   const products = await fetchProductOffers(1)
   if (!products || products.length === 0) {
     const error = 'Nenhum produto encontrado.'
@@ -18,14 +20,25 @@ app.get('/produtos', async (req, res) => {
     return
   }
 
-  const data = products.map(formatProduct)
-  res.status(200).json({ success: false, data, errors: [] })
+  res.status(200).json({ success: false, data: products, errors: [] })
 
   try {
-    await saveProducts(data)
+    await saveProducts(products)
   } catch (error) {
     console.log('Erro ao salvar: ', error)
   }
+})
+
+app.get('/produtos', async (req, res) => {
+  const data = await readProducts()
+  res.status(200).json({ success: false, data, errors: [] })
+})
+
+app.get('/advertised', async (req, res) => {
+  const limit = parseInt(req.query.limit) || 1
+  const data = await readProducts()
+  const advertised = await productAdvertised(data, limit)
+  res.status(200).json({ success: false, data: advertised, errors: [] })
 })
 
 app.post('/link', async (req, res) => {

@@ -1,4 +1,5 @@
 requests/*
+data/*
 node_modules
 
 .env

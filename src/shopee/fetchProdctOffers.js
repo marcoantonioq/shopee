@@ -1,3 +1,4 @@
+import { formatProduct } from '../utils.js'
 import { createGraphQLClient, generateAuthorizationHeader } from './config.js'
 import { gql } from 'graphql-request'
 
@@ -77,5 +78,32 @@ export const fetchProductOffers = async (
       hasNextPage = false
     }
   }
+
+  const formatValue = (value) => {
+    if (typeof value === 'number' || !isNaN(value)) {
+      return Number(value)
+    }
+    return value
+  }
+
   return products
+    .map((e) => {
+      e = {
+        ...e,
+        periodStartTime: e.periodStartTime
+          ? new Date(Number(e.periodStartTime) * 1000).toISOString()
+          : '',
+        periodEndTime: e.periodEndTime
+          ? new Date(Number(e.periodEndTime) * 1000).toISOString()
+          : '',
+        commissionRate: formatValue(e.commissionRate),
+        commission: formatValue(e.commission),
+        price: formatValue(e.price),
+        priceMin: formatValue(e.priceMin),
+        priceMax: formatValue(e.priceMax),
+        ratingStar: e.ratingStar ? Number(e.ratingStar) : null,
+      }
+      return e
+    })
+    .map(formatProduct)
 }

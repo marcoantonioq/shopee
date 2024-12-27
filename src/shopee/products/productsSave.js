@@ -1,18 +1,12 @@
-import { state } from '../../state.js'
-import { auth, spreadsheets } from './Google.js'
+import { existsSync, readFileSync, writeFileSync } from 'fs'
+import { state } from '../../../state.js'
+import { auth, spreadsheets } from '../../google/Google.js'
 
 export const saveProducts = async (products = []) => {
   if (!products.length) throw new Error('Nenhum produto informado!')
 
   await auth(state.google.config)
   const sheets = spreadsheets()
-
-  // const response = await sheets.values.get({
-  //   spreadsheetId: '1wiEQqmCGBOB4G9GYSa4jvFIEn-S7ut9HArx9sNCRKds',
-  //   range: 'Produtos',
-  // })
-
-  // console.log('Resultado sheet: ', response.data.values)
 
   const headers = Object.keys(products[0])
   const values = products.map((obj) =>
@@ -28,4 +22,12 @@ export const saveProducts = async (products = []) => {
       values: [headers, ...values],
     },
   })
+
+  const jsonContent = JSON.stringify(products, null, 2)
+  try {
+    writeFileSync('./data/produtos.json', jsonContent, 'utf8')
+    console.log('Arquivo JSON salvo com sucesso.')
+  } catch (err) {
+    console.error('Erro ao salvar o arquivo JSON:', err)
+  }
 }
