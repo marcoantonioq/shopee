@@ -1,8 +1,15 @@
-import { existsSync, readFileSync, writeFileSync } from 'fs'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
 
 export const productAdvertised = async (products, limit = 1) => {
   try {
-    const file = './data/advertised.json'
+    const dir = './data'
+    const file = `${dir}/advertised.json`
+
+    // Verifica se a pasta 'data' existe, caso contrário, cria a pasta
+    if (!existsSync(dir)) {
+      mkdirSync(dir)
+    }
+
     const advertised = existsSync(file)
       ? JSON.parse(readFileSync(file, 'utf8') || '[]')
       : []
@@ -30,11 +37,7 @@ export const productAdvertised = async (products, limit = 1) => {
     advertised.push(...selectedProducts)
 
     // Salva os produtos atualizados no arquivo
-    writeFileSync(
-      './data/advertised.json',
-      JSON.stringify(advertised, null, 2),
-      'utf8'
-    )
+    writeFileSync(file, JSON.stringify(advertised, null, 2), 'utf8')
 
     // Retorna os produtos selecionados
     return selectedProducts

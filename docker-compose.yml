@@ -6,3 +6,5 @@ services:
     environment:
       - NODE_ENV=development
     user: node
+    volumes:
+      - ./data:/app/data
