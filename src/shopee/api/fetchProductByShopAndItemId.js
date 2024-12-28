@@ -1,13 +1,50 @@
 import { gql } from 'graphql-request'
 import { createGraphQLClient, generateAuthorizationHeader } from './config.js'
 import { formatProduct } from '../../utils.js'
+import axios from 'axios'
 
-export const extractShopAndItemId = (link) => {
+const getRedirectedUrl = async (shortLink, maxRedirects = 5) => {
+  let attempt = 0
+  let currentLink = shortLink
+
+  while (attempt < maxRedirects) {
+    try {
+      const response = await axios.get(currentLink, { maxRedirects: 0 })
+      if (response.status === 301 || response.status === 302) {
+        currentLink = response.headers.location
+        console.log('Link atual: ', currentLink)
+      } else {
+        break
+      }
+    } catch (error) {
+      if (
+        error.response &&
+        (error.response.status === 301 || error.response.status === 302)
+      ) {
+        currentLink = error.response.headers.location
+        console.log('Link atual: ', currentLink)
+      } else {
+        console.error('Erro ao obter URL redirecionada:', error)
+        break
+      }
+    }
+    attempt++
+  }
+
+  return currentLink
+}
+export const extractShopAndItemId = async (link) => {
   const match1 = link.match(/https:\/\/shopee\.com\.br\/product\/(\d+)\/(\d+)/)
   if (match1) return { shopId: match1[1], itemId: match1[2] }
 
   const match2 = link.match(/i\.(\d+)\.(\d+)/)
   if (match2) return { shopId: match2[1], itemId: match2[2] }
+
+  const linkRedirect = await getRedirectedUrl(link)
+  const match3 = linkRedirect.match(
+    /https:\/\/shopee\.com\.br\/product\/(\d+)\/(\d+)/
+  )
+  if (match3) return { shopId: match3[1], itemId: match3[2] }
 
   return null
 }

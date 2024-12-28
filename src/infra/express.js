@@ -64,7 +64,7 @@ app.post('/link', async (req, res) => {
       })
     }
 
-    const { shopId, itemId } = extractShopAndItemId(link) || {}
+    const { shopId, itemId } = (await extractShopAndItemId(link)) || {}
 
     if (shopId && itemId) {
       const product = await fetchProductByShopAndItemId(shopId, itemId)
