@@ -8,3 +8,15 @@ services:
     user: node
     volumes:
       - ./data:/app/data
+    networks:
+      - app-network
+  pinger:
+    image: busybox
+    container_name: pinger
+    entrypoint: ping -c 4 shopee
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

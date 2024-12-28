@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { generateShortLink } from '../shortLink.js'
+import { generateShortLink } from '../api/generateShortLink.js'
 
 export const adGenerator = async (p) => {
   const response = await axios.get(p.imageUrl, {

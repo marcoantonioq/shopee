@@ -1,12 +1,16 @@
 // @ts-nocheck
 import express from 'express'
 import { formatProduct } from '../utils.js'
-import { generateShortLink } from '../shopee/shortLink.js'
+import { generateShortLink } from '../shopee/api/generateShortLink.js'
 import { productAdvertised } from '../shopee/products/productAdvertised.js'
-import { fetchProductOffers } from '../shopee/fetchProdctOffers.js'
+import { fetchProductOffers } from '../shopee/api/fetchProdctOffers.js'
 import { readProducts } from '../shopee/products/productsRead.js'
 import { saveProducts } from '../shopee/products/productsSave.js'
 import { adGenerator } from '../shopee/products/adGenerator.js'
+import {
+  extractShopAndItemId,
+  fetchProductByShopAndItemId,
+} from '../shopee/api/fetchProductByShopAndItemId.js'
 
 export const app = express()
 
@@ -51,8 +55,8 @@ app.get('/advertised', async (req, res) => {
 app.post('/link', async (req, res) => {
   const result = { success: false, data: { msg: '' }, errors: [] }
   try {
-    const { productId, link } = req.body
-    if (!(productId || link)) {
+    const { link } = req.body
+    if (!link) {
       return res.status(400).json({
         success: false,
         data: null,
@@ -60,16 +64,13 @@ app.post('/link', async (req, res) => {
       })
     }
 
-    if (link) {
-      const shortLink = await generateShortLink(link, [
-        'WhatsappMarco',
-        'Capilar',
-        'Beleza',
-      ])
+    const { shopId, itemId } = extractShopAndItemId(link) || {}
 
-      result.data.msg = `Quero: ${shortLink}`
-
-      console.log('Obtido link: ', shortLink)
+    if (shopId && itemId) {
+      const product = await fetchProductByShopAndItemId(shopId, itemId)
+      const ad = await adGenerator(product)
+      console.log('Produto:: ', ad)
+      result.data = ad
     }
   } catch (error) {
     console.log('Erro ao obter link: ', error)
