@@ -66,6 +66,8 @@ app.post('/link', async (req, res) => {
 
     const { shopId, itemId } = (await extractShopAndItemId(link)) || {}
 
+    console.log('Link:: ', link)
+
     if (shopId && itemId) {
       const product = await fetchProductByShopAndItemId(shopId, itemId)
       const ad = await adGenerator(product)
