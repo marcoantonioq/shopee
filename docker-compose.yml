@@ -1,87 +1,26 @@
 services:
-  node-red:
-    image: node-red
-    container_name: node-red
-    hostname: node-red
-    build:
-      context: node-red
-      dockerfile: Dockerfile
-    restart: always
-    environment:
-      - TZ=America/Sao_Paulo
-    volumes:
-      - ./node-red/app:/app
-    networks:
-      - app-network
-    depends_on:
-      - wppconnect
-
-  wppconnect:
-    image: wppconnect
-    container_name: wppconnect
-    build:
-      context: wppconnect
-      dockerfile: Dockerfile
-    restart: always
-    hostname: wppconnect
-    tty: true
-    ports:
-      - '21465:21465'
-    volumes:
-      - ./wppconnect/tokens:/app/tokens
-      - ./wppconnect/userDataDir:/app/userDataDir
-    networks:
-      - app-network
-
-  siga:
-    image: siga
-    container_name: siga
-    build:
-      context: siga
-      dockerfile: Dockerfile
-    environment:
-      - NODE_ENV=production
-    ports:
-      - '3000:3000'
-    restart: always
-    user: node
-    networks:
-      - app-network
-    depends_on:
-      - wppconnect
 
   shopee:
     image: shopee
     container_name: shopee
-    build:
-      context: shopee
-      dockerfile: Dockerfile
+    build: .
     ports:
       - "3001:3001"
     environment:
       - NODE_ENV=development
     user: node
     volumes:
-      - ./shopee/data:/app/data
+      - ./data:/app/data
     restart: always
     tty: true
     networks:
       - app-network
-
-  nginx:
-    image: nginx
-    container_name: nginx
-    ports:
-      - '80:80'
-      - '443:443'
-    volumes:
-      - ./certs:/etc/nginx/certs
-      - ./nginx.conf:/etc/nginx/nginx.conf
-    restart: always
+  pinger:
+    image: busybox
+    container_name: pinger
+    entrypoint: ping -c 4 shopee
     networks:
       - app-network
-    depends_on:
-      - node-red
 
 networks:
   app-network:
