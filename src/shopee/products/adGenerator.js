@@ -58,10 +58,10 @@ const generateCaption = (product) => {
 🛍️ *${productName}*
 
 ${priceInfo}
+${marketingMessage}
 
 👉 *Comprar*: ${shortUrl}
 
-${marketingMessage}
 > Promoção sujeita a alteração a qualquer momento
   `
 }
