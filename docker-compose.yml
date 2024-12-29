@@ -1,5 +1,8 @@
 services:
+
   shopee:
+    image: shopee
+    container_name: shopee
     build: .
     ports:
       - "3001:3001"
@@ -8,6 +11,8 @@ services:
     user: node
     volumes:
       - ./data:/app/data
+    restart: always
+    tty: true
     networks:
       - app-network
   pinger:
