@@ -11,6 +11,8 @@ import {
   extractShopAndItemId,
   fetchProductByShopAndItemId,
 } from '../shopee/api/fetchProductByShopAndItemId.js'
+import { fetchShopOffers } from '../shopee/api/fetchShopOffers.js'
+import { fetchAllShopeeOffers } from '../shopee/api/fetchShopeeOffers.js'
 
 export const app = express()
 
@@ -38,6 +40,46 @@ app.get('/produtos', async (req, res) => {
   const data = await readProducts()
   const products = data
   res.status(200).json({ success: false, data, errors: [] })
+})
+
+app.get('/shopee-offers', async (req, res) => {
+  const { keyword, sortType = 1, page = 1, limit = 10 } = req.query
+
+  try {
+    const data = await fetchAllShopeeOffers({
+      keyword,
+      sortType: +sortType,
+      limit: +limit,
+    })
+    res.json({ success: true, data })
+  } catch (error) {
+    res.status(500).json({ success: false, errors: [error.message] })
+  }
+})
+
+app.get('/shopOffers', async (req, res) => {
+  const {
+    page = 1,
+    sortType = 1,
+    limit = 20,
+    shopId,
+    keyword,
+    shopType,
+  } = req.query
+
+  try {
+    const data = await fetchShopOffers({
+      page: +page,
+      sortType: +sortType,
+      limit: +limit,
+      shopId,
+      keyword,
+      shopType: shopType?.split(',').map(Number),
+    })
+    res.json({ success: true, data })
+  } catch (error) {
+    res.status(500).json({ success: false, errors: [error.message] })
+  }
 })
 
 app.get('/advertised', async (req, res) => {
