@@ -15,9 +15,12 @@ export const productAdvertised = async (products, limit = 1) => {
       : []
 
     // Filtra os produtos que ainda não foram anunciados
-    const newProducts = products.filter(
-      (product) => !advertised.some((item) => item.itemId === product.itemId)
-    )
+    const newProducts = products.filter((product) => {
+      const advertisedProduct = advertised.find(
+        (item) => item.itemId === product.itemId
+      )
+      return !advertisedProduct || product.price < advertisedProduct.price
+    })
 
     // Ordena os produtos pelos critérios fornecidos
     const sortedProducts = newProducts.sort((a, b) => {
@@ -34,7 +37,7 @@ export const productAdvertised = async (products, limit = 1) => {
     const selectedProducts = sortedProducts.slice(0, limit)
 
     // Adiciona os produtos selecionados ao arquivo de anunciados
-    advertised.push(...selectedProducts)
+    advertised.unshift(...selectedProducts)
 
     // Salva os produtos atualizados no arquivo
     writeFileSync(file, JSON.stringify(advertised, null, 2), 'utf8')
