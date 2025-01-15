@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 export const state = {
+  port: process.env.port || 3001,
   google: {
     config: {
       credentials: process.env.GOOGLE_CREDENTIALS

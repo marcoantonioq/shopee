@@ -1,4 +1,4 @@
-import { formatProduct } from '../utils.js'
+import { formatProduct } from '../../utils.js'
 import { createGraphQLClient, generateAuthorizationHeader } from './config.js'
 import { gql } from 'graphql-request'
 

@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, writeFileSync } from 'fs'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
 import { state } from '../../../state.js'
 import { auth, spreadsheets } from '../../google/Google.js'
 
@@ -23,9 +23,16 @@ export const saveProducts = async (products = []) => {
     },
   })
 
+  const dir = './data'
+  const file = `${dir}/produtos.json`
+
+  if (!existsSync(dir)) {
+    mkdirSync(dir)
+  }
+
   const jsonContent = JSON.stringify(products, null, 2)
   try {
-    writeFileSync('./data/produtos.json', jsonContent, 'utf8')
+    writeFileSync(file, jsonContent, 'utf8')
     console.log('Arquivo JSON salvo com sucesso.')
   } catch (err) {
     console.error('Erro ao salvar o arquivo JSON:', err)

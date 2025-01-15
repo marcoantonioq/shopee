@@ -1,16 +1,26 @@
-import { existsSync, readFileSync, writeFileSync } from 'fs'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
 
 export const productAdvertised = async (products, limit = 1) => {
   try {
-    const file = './data/advertised.json'
+    const dir = './data'
+    const file = `${dir}/advertised.json`
+
+    // Verifica se a pasta 'data' existe, caso contrário, cria a pasta
+    if (!existsSync(dir)) {
+      mkdirSync(dir)
+    }
+
     const advertised = existsSync(file)
       ? JSON.parse(readFileSync(file, 'utf8') || '[]')
       : []
 
     // Filtra os produtos que ainda não foram anunciados
-    const newProducts = products.filter(
-      (product) => !advertised.some((item) => item.itemId === product.itemId)
-    )
+    const newProducts = products.filter((product) => {
+      const advertisedProduct = advertised.find(
+        (item) => item.itemId === product.itemId
+      )
+      return !advertisedProduct || product.price < advertisedProduct.price
+    })
 
     // Ordena os produtos pelos critérios fornecidos
     const sortedProducts = newProducts.sort((a, b) => {
@@ -27,14 +37,10 @@ export const productAdvertised = async (products, limit = 1) => {
     const selectedProducts = sortedProducts.slice(0, limit)
 
     // Adiciona os produtos selecionados ao arquivo de anunciados
-    advertised.push(...selectedProducts)
+    advertised.unshift(...selectedProducts)
 
     // Salva os produtos atualizados no arquivo
-    writeFileSync(
-      './data/advertised.json',
-      JSON.stringify(advertised, null, 2),
-      'utf8'
-    )
+    writeFileSync(file, JSON.stringify(advertised, null, 2), 'utf8')
 
     // Retorna os produtos selecionados
     return selectedProducts

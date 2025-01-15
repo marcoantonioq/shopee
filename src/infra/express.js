@@ -1,12 +1,18 @@
 // @ts-nocheck
 import express from 'express'
 import { formatProduct } from '../utils.js'
-import { generateShortLink } from '../shopee/shortLink.js'
+import { generateShortLink } from '../shopee/api/generateShortLink.js'
 import { productAdvertised } from '../shopee/products/productAdvertised.js'
-import { fetchProductOffers } from '../shopee/fetchProdctOffers.js'
+import { fetchProductOffers } from '../shopee/api/fetchProdctOffers.js'
 import { readProducts } from '../shopee/products/productsRead.js'
 import { saveProducts } from '../shopee/products/productsSave.js'
 import { adGenerator } from '../shopee/products/adGenerator.js'
+import {
+  extractShopAndItemId,
+  fetchProductByShopAndItemId,
+} from '../shopee/api/fetchProductByShopAndItemId.js'
+import { fetchShopOffers } from '../shopee/api/fetchShopOffers.js'
+import { fetchAllShopeeOffers } from '../shopee/api/fetchShopeeOffers.js'
 
 export const app = express()
 
@@ -36,6 +42,46 @@ app.get('/produtos', async (req, res) => {
   res.status(200).json({ success: false, data, errors: [] })
 })
 
+app.get('/shopee-offers', async (req, res) => {
+  const { keyword, sortType = 1, page = 1, limit = 10 } = req.query
+
+  try {
+    const data = await fetchAllShopeeOffers({
+      keyword,
+      sortType: +sortType,
+      limit: +limit,
+    })
+    res.json({ success: true, data })
+  } catch (error) {
+    res.status(500).json({ success: false, errors: [error.message] })
+  }
+})
+
+app.get('/shopOffers', async (req, res) => {
+  const {
+    page = 1,
+    sortType = 1,
+    limit = 20,
+    shopId,
+    keyword,
+    shopType,
+  } = req.query
+
+  try {
+    const data = await fetchShopOffers({
+      page: +page,
+      sortType: +sortType,
+      limit: +limit,
+      shopId,
+      keyword,
+      shopType: shopType?.split(',').map(Number),
+    })
+    res.json({ success: true, data })
+  } catch (error) {
+    res.status(500).json({ success: false, errors: [error.message] })
+  }
+})
+
 app.get('/advertised', async (req, res) => {
   const limit = parseInt(req.query.limit) || 1
   const data = await readProducts()
@@ -51,8 +97,8 @@ app.get('/advertised', async (req, res) => {
 app.post('/link', async (req, res) => {
   const result = { success: false, data: { msg: '' }, errors: [] }
   try {
-    const { productId, link } = req.body
-    if (!(productId || link)) {
+    const { link } = req.body
+    if (!link) {
       return res.status(400).json({
         success: false,
         data: null,
@@ -60,16 +106,15 @@ app.post('/link', async (req, res) => {
       })
     }
 
-    if (link) {
-      const shortLink = await generateShortLink(link, [
-        'WhatsappMarco',
-        'Capilar',
-        'Beleza',
-      ])
+    const { shopId, itemId } = (await extractShopAndItemId(link)) || {}
 
-      result.data.msg = `Quero: ${shortLink}`
+    console.log('Link:: ', link)
 
-      console.log('Obtido link: ', shortLink)
+    if (shopId && itemId) {
+      const product = await fetchProductByShopAndItemId(shopId, itemId)
+      const ad = await adGenerator(product)
+      console.log('Produto:: ', ad)
+      result.data = ad
     }
   } catch (error) {
     console.log('Erro ao obter link: ', error)
