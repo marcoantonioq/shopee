@@ -17,7 +17,8 @@
     "express": "^4.21.2",
     "googleapis": "^144.0.0",
     "graphql-request": "^7.1.2",
-    "puppeteer": "^23.11.1",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
     "qrcode": "^1.5.4"
   }
 }

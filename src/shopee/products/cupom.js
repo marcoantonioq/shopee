@@ -1,3 +1,8 @@
+import puppeteer from 'puppeteer-extra'
+import StealthPlugin from 'puppeteer-extra-plugin-stealth'
+
+puppeteer.use(StealthPlugin())
+
 const cupons = [
   {
     name: 'CUPOM10',
@@ -48,4 +53,30 @@ export const cupom = (product) => {
     console.error('Erro ao buscar cupom', error)
     return null
   }
+}
+
+export async function getCoupons() {
+  const browser = await puppeteer.launch({
+    headless: true,
+    userDataDir: './user_data',
+  })
+  const page = await browser.newPage()
+  await page.setUserAgent(
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+  )
+  await page.setViewport({ width: 750, height: 900 })
+  await page.goto('https://shopee.com.br/m/cupom-de-desconto')
+
+  // Selecione os elementos que contêm os cupons
+  const coupons = await page.$$eval('.coupon-item', (elements) => {
+    return elements.map((element) => {
+      const title = element?.querySelector('.coupon-title')?.textContent
+      const value = element?.querySelector('.coupon-value')?.textContent
+      return { title, value }
+    })
+  })
+
+  console.log(coupons)
+
+  await browser.close()
 }
