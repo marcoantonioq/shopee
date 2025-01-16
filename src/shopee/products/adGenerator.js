@@ -68,7 +68,7 @@ const generateCaption = (product) => {
 ${priceInfo}
 ${marketingMessage}
 ${cupomDescont ? '\n' + cupomDescont.description + '\n' : ''} 
-*Comprar* 🛒👇🏻
+*COMPRAR* 🛒👇🏻
 ${shortUrl}
 
 > Promoção sujeita a alteração a qualquer momento
