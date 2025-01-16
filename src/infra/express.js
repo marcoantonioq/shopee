@@ -13,6 +13,7 @@ import {
 } from '../shopee/api/fetchProductByShopAndItemId.js'
 import { fetchShopOffers } from '../shopee/api/fetchShopOffers.js'
 import { fetchAllShopeeOffers } from '../shopee/api/fetchShopeeOffers.js'
+import { extractUrlsText } from '../shopee/products/extractUrlsText.js'
 
 export const app = express()
 
@@ -91,6 +92,23 @@ app.get('/advertised', async (req, res) => {
     success: false,
     data: advertised,
     errors: [],
+  })
+})
+
+app.post('/extract-product-text', async (req, res) => {
+  const { text } = req.body
+  const urls = await extractUrlsText(text)
+  const products = []
+  for (const url of urls) {
+    const { shopId, itemId } = (await extractShopAndItemId(url)) || {}
+    if (shopId && itemId) {
+      const product = await fetchProductByShopAndItemId(shopId, itemId)
+      products.push(product)
+    }
+  }
+  res.status(200).json({
+    success: true,
+    data: products,
   })
 })
 
