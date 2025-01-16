@@ -8,13 +8,7 @@ const start = async () => {
     console.log(`Servidor rodando em http://localhost:${state.port}`)
   )
 
-  const products = await fetchProductOffers(1)
-
-  if (!products || products.length === 0) {
-    const error = 'Nenhum produto encontrado.'
-    console.error(error)
-    return
-  }
+  const products = await fetchProductOffers()
 
   try {
     await saveProducts(products)

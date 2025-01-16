@@ -2,24 +2,18 @@ import { formatProduct } from '../../utils.js'
 import { createGraphQLClient, generateAuthorizationHeader } from './config.js'
 import { gql } from 'graphql-request'
 
-export const fetchProductOffers = async (
+export const fetchProductOffersInfantil = async (
   initialPage = 1,
   sortType = 4,
   listType = 2,
-  maxPages = 15,
-  limit = 50
+  maxPages = 4
 ) => {
   const products = []
   let page = initialPage
 
   const query = gql`
-    query ($page: Int, $sortType: Int, $listType: Int, $limit: Int) {
-      productOfferV2(
-        page: $page
-        sortType: $sortType
-        listType: $listType
-        limit: $limit
-      ) {
+    query ($page: Int, $sortType: Int, $listType: Int) {
+      productOfferV2(page: $page, sortType: $sortType, listType: $listType) {
         nodes {
           productName
           itemId
@@ -53,15 +47,17 @@ export const fetchProductOffers = async (
 
   while (page <= maxPages) {
     try {
-      const variables = { page, sortType, listType, limit }
+      const variables = { page, sortType, listType }
       const payload = JSON.stringify({ query, variables })
       const client = createGraphQLClient(generateAuthorizationHeader(payload))
       const {
         productOfferV2: { nodes = [], pageInfo },
       } = await client.request(query, variables)
+
       products.push(...nodes)
       if (!pageInfo.hasNextPage) break
       page++
+      console.log('Page: ', { page, produtos: nodes.length, pageInfo })
     } catch (error) {
       console.error(`Erro na página ${page}:`, error.message)
       break

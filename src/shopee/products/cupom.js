@@ -5,6 +5,36 @@ puppeteer.use(StealthPlugin())
 
 const cupons = [
   {
+    name: 'OSC1R92',
+    discount: '5',
+    description: `🏷️ APLIQUE CUPOM R$ 5 OFF: OSC1R92 🎟️`,
+    code: '',
+    rule: (product) => {
+      if (new Date() < new Date('2025-01-18 00:00')) {
+        const price = Number(product.price)
+        if (price > 35 && price < 85) {
+          return price - 5
+        }
+      }
+      return 0
+    },
+  },
+  {
+    name: 'L0C4S05',
+    discount: '10',
+    description: `🏷️ APLIQUE CUPOM R$ 10 OFF: L0C4S05 🎟️`,
+    code: '',
+    rule: (product) => {
+      if (new Date() < new Date('2025-01-18 00:00')) {
+        const price = Number(product.price)
+        if (price >= 85) {
+          return price - 10
+        }
+      }
+      return 0
+    },
+  },
+  {
     name: 'CUPOM10',
     discount: '10',
     description: `🏷️ APLIQUE CUPOM 10% OFF:
@@ -46,7 +76,7 @@ export const cupom = (product) => {
     const validCupons = cupons
       .map((cupom) => ({ ...cupom, discountValue: cupom.rule(product) }))
       .filter((cupom) => cupom.discountValue > 0)
-      .sort((a, b) => b.discountValue - a.discountValue)
+      .sort((a, b) => a.discountValue - b.discountValue)
 
     return validCupons[0] || null
   } catch (error) {
