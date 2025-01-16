@@ -1,36 +1,7 @@
 import { gql } from 'graphql-request'
 import { createGraphQLClient, generateAuthorizationHeader } from './config.js'
 import { formatProduct } from '../../utils.js'
-import axios from 'axios'
-
-const getRedirectedUrl = async (shortLink, maxRedirects = 5) => {
-  let currentLink = shortLink
-
-  for (let attempt = 0; attempt < maxRedirects; attempt++) {
-    try {
-      const response = await axios.get(currentLink, { maxRedirects: 0 })
-      if (response.status === 301 || response.status === 302) {
-        currentLink = response.headers.location
-        console.log('Link atual: ', currentLink)
-      } else {
-        break
-      }
-    } catch (error) {
-      if (
-        error.response &&
-        (error.response.status === 301 || error.response.status === 302)
-      ) {
-        currentLink = error.response.headers.location
-        console.log('Link atual: ', currentLink)
-      } else {
-        console.error('Erro ao obter URL redirecionada:', error)
-        break
-      }
-    }
-  }
-
-  return currentLink
-}
+import { getRedirectedUrl } from '../../infra/redirectedUrl.js'
 
 export const extractShopAndItemId = async (link) => {
   const matchPatterns = [

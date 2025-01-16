@@ -94,6 +94,26 @@ app.get('/advertised', async (req, res) => {
   })
 })
 
+app.post('/extract-product-text', async (req, res) => {
+  const { text } = req.body
+  const urls = text.match(/(https?:\/\/[^\s]+)/g) || []
+
+  const products = []
+
+  for (const url of urls) {
+    const { shopId, itemId } = (await extractShopAndItemId(url)) || {}
+    if (shopId && itemId) {
+      const product = await fetchProductByShopAndItemId(shopId, itemId)
+      products.push(await adGenerator(product))
+    }
+  }
+
+  res.status(200).json({
+    success: true,
+    data: products,
+  })
+})
+
 app.post('/link', async (req, res) => {
   const result = { success: false, data: { msg: '' }, errors: [] }
   try {

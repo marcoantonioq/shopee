@@ -36,14 +36,22 @@ const analyzeProductName = (productName) => {
 const generateCaption = (product) => {
   const { productName, price, priceDiscountRate, shortUrl } = product
   const originalPrice = price / (1 - priceDiscountRate / 100)
+
+  const cupomDescont = cupom(product)
+  const variationValue = product.priceMin != product.priceMax ? '~' : ''
+
   const discountText =
     priceDiscountRate < 40
       ? '🔥BAIXOOOOOU🔥'
       : `${priceDiscountRate}% 🔥 DESCONTAÇO IMPERDÍVEL! 🤯`
-  const formattedPrice = price.toLocaleString('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-  })
+  const formattedPrice = (cupomDescont?.discountValue || price).toLocaleString(
+    'pt-BR',
+    {
+      style: 'currency',
+      currency: 'BRL',
+    }
+  )
+
   const formattedOriginalPrice = originalPrice.toLocaleString('pt-BR', {
     style: 'currency',
     currency: 'BRL',
@@ -51,21 +59,19 @@ const generateCaption = (product) => {
   const marketingMessage = analyzeProductName(productName)
 
   const priceInfo =
-    priceDiscountRate > 40
-      ? `💸 De ~${formattedOriginalPrice}~ por *${formattedPrice}*`
+    priceDiscountRate > 30
+      ? `💸 De ~${formattedOriginalPrice}~ por ${variationValue} *${formattedPrice}*`
       : `💸 *${formattedPrice}*`
-
-  const cupomDescont = cupom(product)
 
   return `${discountText}
 🛍️ *${productName}*
 
 ${priceInfo}
 ${marketingMessage}
-${cupomDescont ? cupomDescont.description + '\n' : ''} 
-*Comprar* 🛒👇🏻
-${shortUrl}
 
+*COMPRAR* 🛒👇🏻
+${shortUrl}
+${cupomDescont ? '\n' + cupomDescont.description + '\n' : ''} 
 > Promoção sujeita a alteração a qualquer momento
   `
 }
