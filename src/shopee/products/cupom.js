@@ -10,5 +10,10 @@ const cupons = [
 ]
 
 export const cupom = (product) => {
-  return cupons.filter(({ rule }) => rule(product))[0]
+  try {
+    return cupons.filter(({ rule }) => rule(product))[0]
+  } catch (error) {
+    console.error('Erro ao buscar cupom', error)
+    return null
+  }
 }
