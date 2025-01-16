@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { generateShortLink } from '../api/generateShortLink.js'
 import { marketingMessages } from './marketingMessages.js'
+import { cupom } from './cupom.js'
 
 const fetchImageAsBase64 = async (imageUrl) => {
   try {
@@ -54,12 +55,14 @@ const generateCaption = (product) => {
       ? `💸 De ~${formattedOriginalPrice}~ por *${formattedPrice}*`
       : `💸 *${formattedPrice}*`
 
+  const cupomDescont = cupom(product)
+
   return `${discountText}
 🛍️ *${productName}*
 
 ${priceInfo}
 ${marketingMessage}
-
+${cupomDescont ? cupomDescont.description + '\n' : ''} 
 *Comprar* 🛒👇🏻
 ${shortUrl}
 
