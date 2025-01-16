@@ -58,7 +58,7 @@ const generateCaption = (product) => {
   const marketingMessage = analyzeProductName(productName)
 
   const priceInfo =
-    priceDiscountRate > 40
+    priceDiscountRate > 30
       ? `💸 De ~${formattedOriginalPrice}~ por *${formattedPrice}*`
       : `💸 *${formattedPrice}*`
 
