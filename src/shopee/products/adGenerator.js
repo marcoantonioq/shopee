@@ -67,7 +67,7 @@ const generateCaption = (product) => {
 
 ${priceInfo}
 ${marketingMessage}
-${cupomDescont ? cupomDescont.description + '\n' : ''} 
+${cupomDescont ? '\n' + cupomDescont.description + '\n' : ''} 
 *Comprar* 🛒👇🏻
 ${shortUrl}
 
