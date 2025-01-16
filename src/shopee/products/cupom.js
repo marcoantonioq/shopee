@@ -18,6 +18,22 @@ https://s.shopee.com.br/AA1YTStpzH 🎟️`,
       return 0
     },
   },
+  {
+    name: 'CUPOM30',
+    discount: '30',
+    description: `🏷️ APLIQUE CUPOM R$ 30 OFF
+https://s.shopee.com.br/AA1YTStpzH 🎟️`,
+    code: '',
+    rule: (product) => {
+      if (new Date() < new Date('2025-01-19')) {
+        const price = Number(product.price)
+        if (price >= 249) {
+          return price - 30
+        }
+      }
+      return 0
+    },
+  },
 ]
 
 export const cupom = (product) => {
