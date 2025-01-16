@@ -2,7 +2,7 @@ const cupons = [
   {
     name: 'CUPOM10',
     discount: '10',
-    description: `🏷️ APLIQUE CUPOM R$ 10 OFF: S5MM3R
+    description: `🏷️ APLIQUE CUPOM 10% OFF: S5MM3R
 https://s.shopee.com.br/AA1YTStpzH 🎟️`,
     code: 'S5MM3R',
     rule: (product) => {
