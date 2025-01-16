@@ -38,6 +38,7 @@ const generateCaption = (product) => {
   const originalPrice = price / (1 - priceDiscountRate / 100)
 
   const cupomDescont = cupom(product)
+  const variationValue = product.priceMin != product.priceMax ? '~' : ''
 
   const discountText =
     priceDiscountRate < 40
@@ -59,7 +60,7 @@ const generateCaption = (product) => {
 
   const priceInfo =
     priceDiscountRate > 30
-      ? `💸 De ~${formattedOriginalPrice}~ por *${formattedPrice}*`
+      ? `💸 De ~${formattedOriginalPrice}~ por ${variationValue} *${formattedPrice}*`
       : `💸 *${formattedPrice}*`
 
   return `${discountText}
@@ -67,10 +68,10 @@ const generateCaption = (product) => {
 
 ${priceInfo}
 ${marketingMessage}
-${cupomDescont ? '\n' + cupomDescont.description + '\n' : ''} 
+
 *COMPRAR* 🛒👇🏻
 ${shortUrl}
-
+${cupomDescont ? '\n' + cupomDescont.description + '\n' : ''} 
 > Promoção sujeita a alteração a qualquer momento
   `
 }
