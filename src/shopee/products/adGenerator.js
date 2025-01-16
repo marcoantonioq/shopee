@@ -36,14 +36,21 @@ const analyzeProductName = (productName) => {
 const generateCaption = (product) => {
   const { productName, price, priceDiscountRate, shortUrl } = product
   const originalPrice = price / (1 - priceDiscountRate / 100)
+
+  const cupomDescont = cupom(product)
+
   const discountText =
     priceDiscountRate < 40
       ? '🔥BAIXOOOOOU🔥'
       : `${priceDiscountRate}% 🔥 DESCONTAÇO IMPERDÍVEL! 🤯`
-  const formattedPrice = price.toLocaleString('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-  })
+  const formattedPrice = (cupomDescont?.discountValue || price).toLocaleString(
+    'pt-BR',
+    {
+      style: 'currency',
+      currency: 'BRL',
+    }
+  )
+
   const formattedOriginalPrice = originalPrice.toLocaleString('pt-BR', {
     style: 'currency',
     currency: 'BRL',
@@ -54,8 +61,6 @@ const generateCaption = (product) => {
     priceDiscountRate > 40
       ? `💸 De ~${formattedOriginalPrice}~ por *${formattedPrice}*`
       : `💸 *${formattedPrice}*`
-
-  const cupomDescont = cupom(product)
 
   return `${discountText}
 🛍️ *${productName}*
