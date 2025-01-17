@@ -78,6 +78,8 @@ export const cupom = (product) => {
       .filter((cupom) => cupom.discountValue > 0)
       .sort((a, b) => a.discountValue - b.discountValue)
 
+    console.log('Cupons: ', validCupons)
+
     return validCupons[0] || null
   } catch (error) {
     console.error('Erro ao buscar cupom', error)
@@ -88,7 +90,7 @@ export const cupom = (product) => {
 export async function getCoupons() {
   const browser = await puppeteer.launch({
     headless: true,
-    userDataDir: './user_data',
+    userDataDir: './data/user_data',
   })
   const page = await browser.newPage()
   await page.setUserAgent(

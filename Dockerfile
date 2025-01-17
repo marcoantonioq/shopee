@@ -17,13 +17,12 @@ USER node
 WORKDIR /app
 
 # Copia os arquivos da aplicação para o diretório de trabalho
-COPY --chown=node:node . .
+COPY --chown=node:node package.json package-lock.json ./
 
 # Instala as dependências do npm
 RUN npm install
 
-# Expõe a porta 3000
-EXPOSE 3000
+EXPOSE 3001
 
 # Define o comando padrão para iniciar a aplicação
 CMD ["npm", "start"]

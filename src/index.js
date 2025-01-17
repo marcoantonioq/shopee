@@ -1,6 +1,6 @@
-import { app } from './src/infra/express.js'
-import { fetchProductOffers } from './src/shopee/api/fetchProdctOffers.js'
-import { saveProducts } from './src/shopee/products/productsSave.js'
+import { app } from './infra/express.js'
+import { fetchProductOffers } from './shopee/api/fetchProdctOffers.js'
+import { saveProducts } from './shopee/products/productsSave.js'
 import { state } from './state.js'
 
 const start = async () => {
