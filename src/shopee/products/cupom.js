@@ -1,8 +1,6 @@
 import puppeteer from 'puppeteer-extra'
 import StealthPlugin from 'puppeteer-extra-plugin-stealth'
 
-puppeteer.use(StealthPlugin())
-
 const cupons = [
   {
     name: 'OSC1R92',
@@ -88,6 +86,7 @@ export const cupom = (product) => {
 }
 
 export async function getCoupons() {
+  puppeteer.use(StealthPlugin())
   const browser = await puppeteer.launch({
     headless: true,
     userDataDir: './data/user_data',
