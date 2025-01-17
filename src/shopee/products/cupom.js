@@ -35,7 +35,7 @@ const cupons = [
   {
     name: 'OSC1R92',
     discount: '5',
-    description: `🏷️ APLIQUE CUPOM R$ 5 OFF: OSC1R92 🎟️`,
+    description: `🏷️ APLIQUE CUPOM R$ 5 OFF: 0SC1R92 🎟️`,
     code: '',
     rule: (product) => {
       if (new Date() < new Date('2025-01-18 00:00')) {
