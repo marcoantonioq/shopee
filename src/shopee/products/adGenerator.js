@@ -33,11 +33,17 @@ const analyzeProductName = (productName) => {
   }
 }
 
-const getDiscountTitle = ({ product, cupomDescont, originalPrice }) => {
-  return product.priceDiscountRate < 40
-    ? `🛍️ *${product.productName}*`
-    : `${product.priceDiscountRate}% de desconto 🤯
-🛍️ *${product.productName}*`
+const getDiscountTitle = ({ product }) => {
+  const { priceDiscountRate, productName } = product
+
+  if (priceDiscountRate >= 70) {
+    return `🚨 *MEGA OFERTA: ${priceDiscountRate}% OFF!* 😱\n✨ *${productName}* - Corra, é agora ou nunca!`
+  } else if (priceDiscountRate >= 50) {
+    return `🔥 *OFERTA IMPERDÍVEL: ${priceDiscountRate}% de desconto!*\n🛍️ *${productName}* - Não perca esta chance!`
+  } else if (priceDiscountRate >= 30) {
+    return `⭐ *${priceDiscountRate}% de desconto em ${productName}!* 🛒 Aproveite antes que acabe!`
+  }
+  return `🛍️ *${productName}* - Aproveite um desconto especial!`
 }
 
 const generateCaption = (product) => {
@@ -47,11 +53,7 @@ const generateCaption = (product) => {
   const cupomDescont = cupom(product)
   const variationValue = product.priceMin != product.priceMax ? '~' : ''
 
-  const discountTitle = getDiscountTitle({
-    product,
-    cupomDescont,
-    originalPrice,
-  })
+  const discountTitle = getDiscountTitle({ product })
 
   const formattedPrice = (cupomDescont?.discountValue || price).toLocaleString(
     'pt-BR',
