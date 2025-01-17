@@ -3,6 +3,36 @@ import StealthPlugin from 'puppeteer-extra-plugin-stealth'
 
 const cupons = [
   {
+    name: 'DEZEMBRO81',
+    discount: '8',
+    description: `🏷️ APLIQUE CUPOM R$ 8 OFF: DEZEMBRO81 🎟️`,
+    code: '',
+    rule: (product) => {
+      if (new Date() < new Date('2025-01-19 00:00')) {
+        const price = Number(product.price)
+        if (price > 81) {
+          return price - 8
+        }
+      }
+      return 0
+    },
+  },
+  {
+    name: 'AMERICA19',
+    discount: '19',
+    description: `🏷️ APLIQUE CUPOM R$ 19 OFF: AMERICA19 🎟️`,
+    code: '',
+    rule: (product) => {
+      if (new Date() < new Date('2025-01-19 00:00')) {
+        const price = Number(product.price)
+        if (price > 200) {
+          return price - 19
+        }
+      }
+      return 0
+    },
+  },
+  {
     name: 'OSC1R92',
     discount: '5',
     description: `🏷️ APLIQUE CUPOM R$ 5 OFF: OSC1R92 🎟️`,
