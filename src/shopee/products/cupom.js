@@ -35,9 +35,9 @@ const cupons = [
   {
     name: 'CUPOM10',
     discount: '10',
-    description: `🏷️ APLIQUE CUPOM 10% OFF:
-  https://s.shopee.com.br/AA1YTStpzH 🎟️`,
-    code: 'S5MM3R',
+    description: `🏷️ APLIQUE CUPOM 10% OFF: S5MM3R
+https://s.shopee.com.br/AA1YTStpzH 🎟️`,
+    code: '',
     rule: (product) => {
       if (new Date() < new Date('2025-01-21')) {
         const price = Number(product.price)
