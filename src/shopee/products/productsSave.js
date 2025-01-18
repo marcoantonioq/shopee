@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
+import { existsSync, mkdirSync, writeFileSync } from 'fs'
 import { state } from '../../state.js'
 import { auth, spreadsheets } from '../../google/Google.js'
 

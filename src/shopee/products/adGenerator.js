@@ -51,17 +51,18 @@ const generateCaption = (product) => {
   const originalPrice = price / (1 - priceDiscountRate / 100)
 
   const cupomDescont = cupom(product)
+
+  const newValue = cupomDescont?.discountValue
+    ? price - cupomDescont?.discountValue || 0
+    : price
   const variationValue = product.priceMin != product.priceMax ? '~' : ''
 
   const discountTitle = getDiscountTitle({ product })
 
-  const formattedPrice = (cupomDescont?.discountValue || price).toLocaleString(
-    'pt-BR',
-    {
-      style: 'currency',
-      currency: 'BRL',
-    }
-  )
+  const formattedPrice = newValue.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  })
 
   const formattedOriginalPrice = originalPrice.toLocaleString('pt-BR', {
     style: 'currency',
