@@ -1,0 +1,7 @@
+### Request para obter o link do produto Shopee
+POST http://localhost:3001/link
+Content-Type: application/json
+
+{
+  "link": "https://s.shopee.com.br/8KZQ96E2oC"
+}

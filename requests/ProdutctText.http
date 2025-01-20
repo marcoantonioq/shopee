@@ -1,0 +1,7 @@
+### Request para obter o link do produto Shopee
+POST http://localhost:3001/extract-product-text
+Content-Type: application/json
+
+{
+  "text": "😳QUE PRECINHO É ESSE MAMÃES ⁉️\n\nCorre para fazer estoque 💨💨\n\n> 🛍️Caixa 10 Pacotes Lenços Umedecidos Turminha da Bagunça 120 Folhas Com Tampa...\n\nde R$ 69,99\n💰por R$ 49,87 🔥🚨\n\n🎟️Use o cupom: 10% OFF\n\n🔗Compre aqui: https://s.shopee.com.br/4VNBQR3EXo\n\n🔗Pega o cupom 10% off aqui: https://s.shopee.com.br/50JRr154pN"
+}
