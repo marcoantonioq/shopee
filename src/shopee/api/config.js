@@ -1,6 +1,6 @@
 import { GraphQLClient } from 'graphql-request'
 import crypto from 'crypto'
-import { state } from '../../../state.js'
+import { state } from '../../state.js'
 
 export function generateAuthorizationHeader(payload) {
   const timestamp = Math.floor(Date.now() / 1000)

@@ -13,14 +13,13 @@ import {
 } from '../shopee/api/fetchProductByShopAndItemId.js'
 import { fetchShopOffers } from '../shopee/api/fetchShopOffers.js'
 import { fetchAllShopeeOffers } from '../shopee/api/fetchShopeeOffers.js'
-import { fetchProductOffersInfantil } from '../shopee/api/fetchProdctOffersInfantil.js'
 
 export const app = express()
 
 app.use(express.json({ limit: '1gb' }))
 
 app.get('/reload-produtos', async (req, res) => {
-  const products = await fetchProductOffersInfantil(0)
+  const products = await fetchProductOffers()
   if (!products || products.length === 0) {
     const error = 'Nenhum produto encontrado.'
     console.error(error)

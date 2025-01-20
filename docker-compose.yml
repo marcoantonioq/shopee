@@ -11,6 +11,8 @@ services:
     user: node
     volumes:
       - ./data:/app/data
+      - ./src:/app/src
+      - ./.env:/app/.env
     restart: always
     tty: true
     networks:

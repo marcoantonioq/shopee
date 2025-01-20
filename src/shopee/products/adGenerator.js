@@ -33,24 +33,36 @@ const analyzeProductName = (productName) => {
   }
 }
 
+const getDiscountTitle = ({ product }) => {
+  const { priceDiscountRate, productName } = product
+
+  if (priceDiscountRate >= 70) {
+    return `🚨 *${priceDiscountRate}% OFF!* 😱\n✨ *${productName}* - Corra, é agora ou nunca!`
+  } else if (priceDiscountRate >= 50) {
+    return `🔥 *${priceDiscountRate}% de desconto!*\n🛍️ *${productName}* - Não perca esta chance!`
+  } else if (priceDiscountRate >= 30) {
+    return `⭐ *${priceDiscountRate}% de desconto em ${productName}!* 🛒 Aproveite antes que acabe!`
+  }
+  return `🛍️ *${productName}* - Aproveite um desconto especial!`
+}
+
 const generateCaption = (product) => {
   const { productName, price, priceDiscountRate, shortUrl } = product
   const originalPrice = price / (1 - priceDiscountRate / 100)
 
   const cupomDescont = cupom(product)
+
+  const newValue = cupomDescont?.discountValue
+    ? price - cupomDescont?.discountValue || 0
+    : price
   const variationValue = product.priceMin != product.priceMax ? '~' : ''
 
-  const discountText =
-    priceDiscountRate < 40
-      ? '🔥BAIXOOOOOU🔥'
-      : `${priceDiscountRate}% 🔥 DESCONTAÇO IMPERDÍVEL! 🤯`
-  const formattedPrice = (cupomDescont?.discountValue || price).toLocaleString(
-    'pt-BR',
-    {
-      style: 'currency',
-      currency: 'BRL',
-    }
-  )
+  const discountTitle = getDiscountTitle({ product })
+
+  const formattedPrice = newValue.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  })
 
   const formattedOriginalPrice = originalPrice.toLocaleString('pt-BR', {
     style: 'currency',
@@ -63,8 +75,7 @@ const generateCaption = (product) => {
       ? `💸 De ~${formattedOriginalPrice}~ por ${variationValue}*${formattedPrice}*`
       : `💸 ${variationValue}*${formattedPrice}*`
 
-  return `${discountText}
-🛍️ *${productName}*
+  return `${discountTitle}
 
 ${priceInfo}
 ${marketingMessage}
