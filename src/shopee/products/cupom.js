@@ -26,43 +26,31 @@ const parseValue = (value, defaultValue = 0) =>
 export const cupom = (product) => {
   try {
     const now = new Date()
-    console.log('Cupons: ', cupons)
 
     const validCupons = cupons
-      .filter((cupom) => cupom['Descrição'])
       .map((cupom) => {
         try {
-          const c = {
-            description: cupom['Descrição'],
-            valorMinimo: parseValue(cupom['Valor Mínimo'], 0),
-            valorMaximo: parseValue(cupom['Valor Máximo'], 10000),
-            descontoReais: parseValue(cupom['Desconto R$'], 0),
-            descontoPercentual: parseValue(cupom['Desconto %'], 0),
-            descontoLimite: parseValue(cupom['Desconto Limite'], 0),
-            inicio: toDate(cupom['Início'], new Date('2025-01-01')),
-            fim: toDate(cupom['Fim'], new Date('2030-12-31')),
-            lojasOficiais: cupom['Lojas Oficiais'] === true,
-            discountValue: 0,
-          }
-
           if (
-            now >= c.inicio &&
-            now <= c.fim &&
-            product.price >= c.valorMinimo &&
-            product.price <= c.valorMaximo
+            now >= cupom.inicio &&
+            now <= cupom.fim &&
+            product.price >= cupom.valorMinimo &&
+            product.price <= cupom.valorMaximo
           ) {
-            c.discountValue = c.descontoReais
-            if (c.descontoPercentual > 0) {
-              c.discountValue = Math.min(
-                product.price * (c.descontoPercentual / 100),
-                c.descontoLimite
+            cupom.discountValue = cupom.descontoReais
+            if (cupom.descontoPercentual > 0) {
+              cupom.discountValue = Math.min(
+                product.price * (cupom.descontoPercentual / 100),
+                cupom.descontoLimite
               )
             }
-            if (c.lojasOficiais && product.shopType !== 1) {
-              c.discountValue = 0
+            if (
+              (cupom.lojasOficiais && !product.shopType?.includes(1)) ||
+              product.shopType?.length === 0
+            ) {
+              cupom.discountValue = 0
             }
           }
-          return c
+          return cupom
         } catch (error) {
           console.log('Cupom inválido: ', cupom, error)
           return null
@@ -71,6 +59,7 @@ export const cupom = (product) => {
       .filter((cupom) => cupom && cupom.discountValue > 0)
       .sort((a, b) => (b ? b.discountValue : 0) - (a ? a.discountValue : 0))
 
+    console.log('Cupons: ', validCupons, product)
     return validCupons[0] || null
   } catch (error) {
     console.error('Erro ao processar cupons: ', error)
@@ -100,9 +89,30 @@ export async function updateCoupons() {
     }
 
     if (result?.data?.values) {
+      const now = new Date()
       const header = result?.data?.values[0]
       cupons = mapearTabela(header, result.data.values?.slice(1))
-      console.log('Cupons atualizados: ', cupons.length)
+        .filter((cupom) => cupom['Descrição'])
+        .map((c) => {
+          return {
+            description: c['Descrição'],
+            valorMinimo: parseValue(c['Valor Mínimo'], 0),
+            valorMaximo: parseValue(c['Valor Máximo'], 10000),
+            descontoReais: parseValue(c['Desconto R$'], 0),
+            descontoPercentual: parseValue(c['Desconto %'], 0),
+            descontoLimite: parseValue(c['Desconto Limite'], 0),
+            inicio: toDate(c['Início'], new Date('2025-01-01')),
+            fim: toDate(c['Fim'], new Date('2030-12-31')),
+            lojasOficiais: c['Lojas Oficiais'].toLowerCase() === 'true',
+            discountValue: 0,
+          }
+        })
+        .filter(
+          (c) =>
+            now >= toDate(c.inicio, new Date('2025-01-01')) &&
+            now <= toDate(c.fim, new Date('2030-12-31'))
+        )
+
       return cupons
     }
   } catch (error) {
