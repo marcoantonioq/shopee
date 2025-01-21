@@ -52,9 +52,11 @@ const generateCaption = (product) => {
 
   const cupomDescont = cupom(product)
 
-  const newValue = cupomDescont?.discountValue
-    ? price - cupomDescont?.discountValue || 0
-    : price
+  // const newValue = cupomDescont?.discountValue
+  //   ? price - cupomDescont?.discountValue || 0
+  //   : price
+  const newValue = price
+
   const variationValue = product.priceMin != product.priceMax ? '~' : ''
 
   const discountTitle = getDiscountTitle({ product })
@@ -82,9 +84,8 @@ ${marketingMessage}
 
 *COMPRAR* 🛒👇🏻
 ${shortUrl}
-> Promoção sujeita a alteração a qualquer momento
-${cupomDescont ? '\n' + cupomDescont.description + '\n' : ''} 
-  `
+> Promoção sujeita a alteração a qualquer momento`
+  // ${cupomDescont ? '\n' + cupomDescont.description + '\n' : ''}
 }
 
 export const adGenerator = async (product) => {
