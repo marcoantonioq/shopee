@@ -74,7 +74,7 @@ const generateCaption = (product) => {
 
   const priceInfo =
     priceDiscountRate > 30
-      ? `💸 De ~${formattedOriginalPrice}~ por ${variationValue}*${formattedPrice}*`
+      ? `~DE ${formattedOriginalPrice}~ ❌\nPOR ${variationValue}*${formattedPrice}* 🔥`
       : `💸 ${variationValue}*${formattedPrice}*`
 
   return `${discountTitle}
