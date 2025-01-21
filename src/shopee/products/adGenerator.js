@@ -82,8 +82,8 @@ ${marketingMessage}
 
 *COMPRAR* 🛒👇🏻
 ${shortUrl}
-${cupomDescont ? '\n' + cupomDescont.description + '\n' : ''} 
 > Promoção sujeita a alteração a qualquer momento
+${cupomDescont ? '\n' + cupomDescont.description + '\n' : ''} 
   `
 }
 

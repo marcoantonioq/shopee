@@ -4,4 +4,4 @@ module.exports = {
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'lcov'],
   testMatch: ['**/src/**/*.test.js'],
-};
+}
