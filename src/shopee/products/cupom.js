@@ -19,9 +19,21 @@ const toDate = (s, defaultDate) => {
   )
 }
 
-const parseValue = (value, defaultValue = 0) =>
-  parseFloat(value.replace('R$', '').replace('%', '').replace(',', '.')) ||
-  defaultValue
+const parseValue = (value, defaultValue = 0) => {
+  if (value === undefined || value === null || value.trim() === '') {
+    return defaultValue
+  }
+
+  const parsedValue = parseFloat(
+    value.replace('R$', '').replace('%', '').replace(',', '.')
+  )
+
+  if (isNaN(parsedValue)) {
+    throw new Error('Valor inválido')
+  }
+
+  return parsedValue
+}
 
 export const cupom = (product) => {
   try {
@@ -94,21 +106,27 @@ export async function updateCoupons() {
       cupons = mapearTabela(header, result.data.values?.slice(1))
         .filter((cupom) => cupom['Descrição'])
         .map((c) => {
-          return {
-            description: c['Descrição'],
-            valorMinimo: parseValue(c['Valor Mínimo'], 0),
-            valorMaximo: parseValue(c['Valor Máximo'], 10000),
-            descontoReais: parseValue(c['Desconto R$'], 0),
-            descontoPercentual: parseValue(c['Desconto %'], 0),
-            descontoLimite: parseValue(c['Desconto Limite'], 0),
-            inicio: toDate(c['Início'], new Date('2025-01-01')),
-            fim: toDate(c['Fim'], new Date('2030-12-31')),
-            lojasOficiais: c['Lojas Oficiais'].toLowerCase() === 'true',
-            discountValue: 0,
+          try {
+            return {
+              description: c['Descrição'],
+              valorMinimo: parseValue(c['Valor Mínimo'], 0),
+              valorMaximo: parseValue(c['Valor Máximo'], 10000),
+              descontoReais: parseValue(c['Desconto R$'], 0),
+              descontoPercentual: parseValue(c['Desconto %'], 0),
+              descontoLimite: parseValue(c['Desconto Limite'], 0),
+              inicio: toDate(c['Início'], new Date('2025-01-01')),
+              fim: toDate(c['Fim'], new Date('2030-12-31')),
+              lojasOficiais: c['Lojas Oficiais'].toLowerCase() === 'true',
+              discountValue: 0,
+            }
+          } catch (error) {
+            console.error('Erro ao processar cupom: ', c, error)
+            return null
           }
         })
         .filter(
           (c) =>
+            c &&
             now >= toDate(c.inicio, new Date('2025-01-01')) &&
             now <= toDate(c.fim, new Date('2030-12-31'))
         )
