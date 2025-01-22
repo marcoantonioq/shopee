@@ -37,13 +37,13 @@ const getDiscountTitle = ({ product }) => {
   const { priceDiscountRate, productName } = product
 
   if (priceDiscountRate >= 70) {
-    return `🚨 *${priceDiscountRate}% OFF!* 😱\n✨ *${productName}`
+    return `🚨 ${priceDiscountRate}% OFF! 😱\n✨ ${productName}`
   } else if (priceDiscountRate >= 50) {
-    return `🔥 *${priceDiscountRate}% de desconto!*\n🛍️ *${productName}`
+    return `🔥 ${priceDiscountRate}% de desconto!\n🛍️ ${productName}`
   } else if (priceDiscountRate >= 30) {
-    return `⭐ *${priceDiscountRate}% de desconto em ${productName}`
+    return `⭐ ${priceDiscountRate}% de desconto em ${productName}`
   }
-  return `🛍️ *${productName}* - Aproveite um desconto especial!`
+  return `🛍️ ${productName}`
 }
 
 const generateCaption = (product) => {
