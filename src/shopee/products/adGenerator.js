@@ -37,13 +37,13 @@ const getDiscountTitle = ({ product }) => {
   const { priceDiscountRate, productName } = product
 
   if (priceDiscountRate >= 70) {
-    return `🚨 *${priceDiscountRate}% OFF!* 😱\n✨ *${productName}* - Corra, é agora ou nunca!`
+    return `🚨 ${priceDiscountRate}% OFF! 😱\n✨ ${productName}`
   } else if (priceDiscountRate >= 50) {
-    return `🔥 *${priceDiscountRate}% de desconto!*\n🛍️ *${productName}* - Não perca esta chance!`
+    return `🔥 ${priceDiscountRate}% de desconto!\n🛍️ ${productName}`
   } else if (priceDiscountRate >= 30) {
-    return `⭐ *${priceDiscountRate}% de desconto em ${productName}!* 🛒 Aproveite antes que acabe!`
+    return `⭐ ${priceDiscountRate}% de desconto em ${productName}`
   }
-  return `🛍️ *${productName}* - Aproveite um desconto especial!`
+  return `🛍️ ${productName}`
 }
 
 const generateCaption = (product) => {
@@ -52,9 +52,11 @@ const generateCaption = (product) => {
 
   const cupomDescont = cupom(product)
 
-  const newValue = cupomDescont?.discountValue
-    ? price - cupomDescont?.discountValue || 0
-    : price
+  // const newValue = cupomDescont?.discountValue
+  //   ? price - cupomDescont?.discountValue || 0
+  //   : price
+  const newValue = price
+
   const variationValue = product.priceMin != product.priceMax ? '~' : ''
 
   const discountTitle = getDiscountTitle({ product })
@@ -72,7 +74,7 @@ const generateCaption = (product) => {
 
   const priceInfo =
     priceDiscountRate > 30
-      ? `💸 De ~${formattedOriginalPrice}~ por ${variationValue}*${formattedPrice}*`
+      ? `~DE ${formattedOriginalPrice}~ ❌\nPOR ${variationValue}*${formattedPrice}* 🔥`
       : `💸 ${variationValue}*${formattedPrice}*`
 
   return `${discountTitle}
@@ -82,9 +84,8 @@ ${marketingMessage}
 
 *COMPRAR* 🛒👇🏻
 ${shortUrl}
-${cupomDescont ? '\n' + cupomDescont.description + '\n' : ''} 
-> Promoção sujeita a alteração a qualquer momento
-  `
+> Promoção sujeita a alteração a qualquer momento`
+  // ${cupomDescont ? '\n' + cupomDescont.description + '\n' : ''}
 }
 
 export const adGenerator = async (product) => {

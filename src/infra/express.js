@@ -13,6 +13,7 @@ import {
 } from '../shopee/api/fetchProductByShopAndItemId.js'
 import { fetchShopOffers } from '../shopee/api/fetchShopOffers.js'
 import { fetchAllShopeeOffers } from '../shopee/api/fetchShopeeOffers.js'
+import { processShopeeOffer } from '../shopee/util/processShopeeOffer.js'
 
 export const app = express()
 
@@ -119,11 +120,7 @@ app.post('/link', async (req, res) => {
   try {
     const { link } = req.body
     if (!link) {
-      return res.status(400).json({
-        success: false,
-        data: null,
-        errors: ['Product ID is required'],
-      })
+      throw new Error('Link is required')
     }
 
     const { shopId, itemId } = (await extractShopAndItemId(link)) || {}
@@ -138,7 +135,32 @@ app.post('/link', async (req, res) => {
     }
   } catch (error) {
     console.log('Erro ao obter link: ', error)
+    result.errors.push('' + error)
+    result.success = false
+    return res.status(400).json(result)
   }
 
+  res.status(200).json(result)
+})
+
+app.post('/process-shopee', async (req, res) => {
+  const result = { success: false, data: { msg: '' }, errors: [] }
+  try {
+    const { text } = req.body
+    if (!text) {
+      throw new Error('Mensagem is required')
+    }
+
+    const offfer = await processShopeeOffer(text)
+    if (offfer && offfer.isOffer) {
+      result.data = offfer.replacedText
+    } else {
+      throw new Error('Não é uma oferta!')
+    }
+  } catch (error) {
+    console.log('Erro ao obter link: ', error)
+    result.errors.push('' + error)
+    res.status(400).json(result)
+  }
   res.status(200).json(result)
 })
