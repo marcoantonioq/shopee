@@ -157,10 +157,10 @@ app.post('/process-shopee', async (req, res) => {
     } else {
       throw new Error('Não é uma oferta!')
     }
+    console.log('Resultado: ', result)
+    res.status(200).json(result)
   } catch (error) {
     result.errors.push('' + error)
     res.status(400).json(result)
   }
-  console.log('Resultado: ', result)
-  res.status(200).json(result)
 })
