@@ -158,7 +158,6 @@ app.post('/process-shopee', async (req, res) => {
       throw new Error('Não é uma oferta!')
     }
   } catch (error) {
-    console.log('Erro ao obter link: ', error)
     result.errors.push('' + error)
     res.status(400).json(result)
   }

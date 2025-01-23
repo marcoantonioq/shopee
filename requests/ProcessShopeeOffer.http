@@ -1,7 +1,7 @@
 ### Request para obter o link do produto Shopee
-POST http://localhost:3001/process-shopee
+POST http://localhost:3001/link
 Content-Type: application/json
 
 {
-  "text": "🔗Resgate aqui o cupom das Lojas Oficiais: https://s.shopee.com.br/8"
+  "text": ""
 }
