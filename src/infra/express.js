@@ -133,14 +133,13 @@ app.post('/link', async (req, res) => {
       console.log('Produto:: ', ad)
       result.data = ad
     }
+    res.status(200).json(result)
   } catch (error) {
     console.log('Erro ao obter link: ', error)
     result.errors.push('' + error)
     result.success = false
     return res.status(400).json(result)
   }
-
-  res.status(200).json(result)
 })
 
 app.post('/process-shopee', async (req, res) => {
@@ -150,7 +149,6 @@ app.post('/process-shopee', async (req, res) => {
     if (!text) {
       throw new Error('Mensagem is required')
     }
-
     const offer = await processShopeeOffer(text)
     if (offer && offer.isOffer) {
       result.data = offer.replacedText
