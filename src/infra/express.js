@@ -151,9 +151,9 @@ app.post('/process-shopee', async (req, res) => {
       throw new Error('Mensagem is required')
     }
 
-    const offfer = await processShopeeOffer(text)
-    if (offfer && offfer.isOffer) {
-      result.data = offfer.replacedText
+    const offer = await processShopeeOffer(text)
+    if (offer && offer.isOffer) {
+      result.data = offer.replacedText
     } else {
       throw new Error('Não é uma oferta!')
     }
@@ -161,5 +161,6 @@ app.post('/process-shopee', async (req, res) => {
     result.errors.push('' + error)
     res.status(400).json(result)
   }
+  console.log('Resultado: ', result)
   res.status(200).json(result)
 })
