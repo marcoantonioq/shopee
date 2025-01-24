@@ -70,8 +70,6 @@ export const fetchAllShopeeOffers = async ({
         page,
         limit,
       })
-      console.log('Page info: ', pageInfo)
-
       allOffers.push(...nodes)
       hasNextPage = pageInfo.hasNextPage
       page = pageInfo.page + 1

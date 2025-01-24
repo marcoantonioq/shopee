@@ -33,7 +33,7 @@ app.get('/reload-produtos', async (req, res) => {
   try {
     await saveProducts(products)
   } catch (error) {
-    console.log('Erro ao salvar: ', error)
+    console.info('Erro ao salvar: ', error)
   }
 })
 
@@ -125,22 +125,19 @@ app.post('/link', async (req, res) => {
 
     const { shopId, itemId } = (await extractShopAndItemId(link)) || {}
 
-    console.log('Link:: ', link)
-
     if (shopId && itemId) {
       const product = await fetchProductByShopAndItemId(shopId, itemId)
       const ad = await adGenerator(product)
-      console.log('Produto:: ', ad)
       result.data = ad
+      res.status(200).json(result)
+    } else {
+      throw new Error('Link inválido')
     }
   } catch (error) {
-    console.log('Erro ao obter link: ', error)
-    result.errors.push('' + error)
+    result.errors.push('' + error.message)
     result.success = false
     return res.status(400).json(result)
   }
-
-  res.status(200).json(result)
 })
 
 app.post('/process-shopee', async (req, res) => {
