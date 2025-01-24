@@ -154,13 +154,12 @@ app.post('/process-shopee', async (req, res) => {
     const offfer = await processShopeeOffer(text)
     if (offfer && offfer.isOffer) {
       result.data = offfer.replacedText
+      res.status(200).json(result)
     } else {
       throw new Error('Não é uma oferta!')
     }
   } catch (error) {
-    console.log('Erro ao obter link: ', error)
     result.errors.push('' + error)
     res.status(400).json(result)
   }
-  res.status(200).json(result)
 })
