@@ -4,8 +4,6 @@ import { auth, spreadsheets } from '../../google/Google.js'
 
 export const saveProducts = async (products = []) => {
   try {
-    console.log('Produtos para salvar: ', products.length)
-
     await auth(state.google.config)
     const sheets = spreadsheets()
 
@@ -41,7 +39,6 @@ export const saveProducts = async (products = []) => {
     const jsonContent = JSON.stringify(products, null, 2)
     try {
       writeFileSync(file, jsonContent, 'utf8')
-      console.log('Arquivo JSON salvo com sucesso.')
     } catch (err) {
       console.error('Erro ao salvar o arquivo JSON:', err)
     }
