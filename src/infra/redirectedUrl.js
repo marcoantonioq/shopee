@@ -18,7 +18,6 @@ export const getRedirectedUrl = async (shortLink, maxRedirects = 5) => {
       ) {
         currentLink = error.response.headers.location
       } else {
-        console.error('Erro ao obter URL redirecionada:', error)
         break
       }
     }

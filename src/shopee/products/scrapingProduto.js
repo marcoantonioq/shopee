@@ -18,19 +18,6 @@ async function scrapeAndScreenshot() {
     )
     return targetH2?.nextElementSibling || null
   })
-
-  // Converte o JSHandle para um ElementHandle, se possível
-  // const elementHandle = divHandle.asElement()
-
-  // if (elementHandle) {
-  //   // Faz o screenshot da div localizada
-  //   await elementHandle.screenshot({ path: 'div_screenshot.png' })
-  //   console.log('Screenshot capturada: div_screenshot.png')
-  // } else {
-  //   console.log('Elemento não encontrado ou próximo <div> não existe!')
-  // }
-
-  // await browser.close()
 }
 
 scrapeAndScreenshot().catch(console.error)

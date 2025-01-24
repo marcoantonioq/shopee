@@ -64,14 +64,12 @@ export const cupom = (product) => {
           }
           return cupom
         } catch (error) {
-          console.log('Cupom inválido: ', cupom, error)
           return null
         }
       })
       .filter((cupom) => cupom && cupom.discountValue > 0)
       .sort((a, b) => (b ? b.discountValue : 0) - (a ? a.discountValue : 0))
 
-    console.log('Cupons: ', validCupons, product)
     return validCupons[0] || null
   } catch (error) {
     console.error('Erro ao processar cupons: ', error)
