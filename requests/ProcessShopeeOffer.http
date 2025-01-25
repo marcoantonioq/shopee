@@ -3,5 +3,5 @@ POST http://localhost:3001/process-shopee
 Content-Type: application/json
 
 {
-  "text": ""
+  "text": "compre aqui: https://s.shopee.com.br/AKLCfkKZrD"
 }

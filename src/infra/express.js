@@ -28,7 +28,7 @@ app.get('/reload-produtos', async (req, res) => {
     return
   }
 
-  res.status(200).json({ success: false, data: products, errors: [] })
+  res.status(200).json({ success: true, data: products, errors: [] })
 
   try {
     await saveProducts(products)
@@ -54,7 +54,7 @@ app.get('/shopee-offers', async (req, res) => {
     })
     res.json({ success: true, data })
   } catch (error) {
-    res.status(500).json({ success: false, errors: [error.message] })
+    res.status(200).json({ success: false, errors: [error.message] })
   }
 })
 
@@ -79,7 +79,7 @@ app.get('/shopOffers', async (req, res) => {
     })
     res.json({ success: true, data })
   } catch (error) {
-    res.status(500).json({ success: false, errors: [error.message] })
+    res.status(200).json({ success: false, errors: [error.message] })
   }
 })
 
@@ -89,7 +89,7 @@ app.get('/advertised', async (req, res) => {
   let advertised = await productAdvertised(data, limit)
   advertised = await Promise.all(advertised.map(adGenerator))
   res.status(200).json({
-    success: false,
+    success: true,
     data: advertised,
     errors: [],
   })
@@ -116,7 +116,7 @@ app.post('/extract-product-text', async (req, res) => {
 })
 
 app.post('/link', async (req, res) => {
-  const result = { success: false, data: { msg: '' }, errors: [] }
+  const result = { success: true, data: { msg: '' }, errors: [] }
   try {
     const { link } = req.body
     if (!link) {
@@ -129,20 +129,18 @@ app.post('/link', async (req, res) => {
       const product = await fetchProductByShopAndItemId(shopId, itemId)
       const ad = await adGenerator(product)
       result.data = ad
-      res.status(200).json(result)
     } else {
       throw new Error('Link inválido')
     }
-    res.status(200).json(result)
   } catch (error) {
-    result.errors.push('' + error.message)
     result.success = false
-    return res.status(400).json(result)
+    result.errors.push('' + error.message)
   }
+  return res.status(200).json(result)
 })
 
 app.post('/process-shopee', async (req, res) => {
-  const result = { success: false, data: { msg: '' }, errors: [] }
+  const result = { success: true, data: { msg: '' }, errors: [] }
   try {
     const { text } = req.body
     if (!text) {
@@ -152,12 +150,12 @@ app.post('/process-shopee', async (req, res) => {
     const offfer = await processShopeeOffer(text)
     if (offfer && offfer.isOffer) {
       result.data = offfer.replacedText
-      res.status(200).json(result)
     } else {
       throw new Error('Não é uma oferta!')
     }
   } catch (error) {
+    result.success = false
     result.errors.push('' + error)
-    res.status(400).json(result)
   }
+  res.status(200).json(result)
 })
